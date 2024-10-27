@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Crush</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            text-align: center;
+        }
+        h1 {
+            font-size: 3em;
+            font-family: 'Cursive', sans-serif;
+            margin-top: 50px;
+        }
+        .rules, .theory {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            text-align: left;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            border-radius: 10px;
+        }
+        .rules {
+            font-weight: bold;
+        }
+        .theory ul {
+            list-style: none;
+            padding: 0;
+        }
+        .theory ul li {
+            margin: 10px 0;
+        }
+        .tautologia { color: green; font-weight: bold; }
+        .contradicao { color: red; font-weight: bold; }
+        .contingencia { color: orange; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Logic Crush</h1>
+    <div class="rules">
+        <h2>REGRAS</h2>
+        <p>Para pontuar no Logic Crush você tem que alinhar três quadradinhos da mesma cor.</p>
+    </div>
+    <div class="theory">
+        <h2>Embassamento Teórico</h2>
+        <ul>
+            <li><span class="tautologia">TAUTOLOGIA</span> é toda proposição composta em cuja última coluna da sua tabela verdade só aparece VV (verdade)</li>
+            <li><span class="contradicao">CONTRADIÇÃO</span> é toda proposição cuja última coluna da sua tabela verdade só tem FF (falso)</li>
+            <li><span class="contingencia">CONTINGÊNCIA</span> é toda proposição cuja última coluna tem pelo menos um V e um F VF</li>
+        </ul>
+    </div>
+</body>
+</html>

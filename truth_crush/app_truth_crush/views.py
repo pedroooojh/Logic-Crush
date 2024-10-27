@@ -1,4 +1,4 @@
 from django.shortcuts import render
 
-def home(request):
-    return render(request,'Truth Crush/home.html')
+def index(request):
+    return render(request, 'app_truth_crush/index.html')
