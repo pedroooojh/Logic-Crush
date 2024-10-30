@@ -1,58 +1,234 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logic Crush</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
-            text-align: center;
-        }
-        h1 {
-            font-size: 3em;
-            font-family: 'Cursive', sans-serif;
-            margin-top: 50px;
-        }
-        .rules, .theory {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            text-align: left;
-            border: 1px solid #ddd;
-            background-color: #fff;
-            border-radius: 10px;
-        }
-        .rules {
-            font-weight: bold;
-        }
-        .theory ul {
-            list-style: none;
-            padding: 0;
-        }
-        .theory ul li {
-            margin: 10px 0;
-        }
-        .tautologia { color: green; font-weight: bold; }
-        .contradicao { color: red; font-weight: bold; }
-        .contingencia { color: orange; font-weight: bold; }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+
 </head>
+
 <body>
-    <h1>Logic Crush</h1>
-    <div class="rules">
-        <h2>REGRAS</h2>
-        <p>Para pontuar no Logic Crush você tem que alinhar três quadradinhos da mesma cor.</p>
-    </div>
-    <div class="theory">
-        <h2>Embassamento Teórico</h2>
-        <ul>
-            <li><span class="tautologia">TAUTOLOGIA</span> é toda proposição composta em cuja última coluna da sua tabela verdade só aparece VV (verdade)</li>
-            <li><span class="contradicao">CONTRADIÇÃO</span> é toda proposição cuja última coluna da sua tabela verdade só tem FF (falso)</li>
-            <li><span class="contingencia">CONTINGÊNCIA</span> é toda proposição cuja última coluna tem pelo menos um V e um F VF</li>
-        </ul>
+    <div class="logic-crush">Logic Crush</div>
+
+    <div class="container">
+        <!-- coisas do lado esquerdo (texto) -->
+        <div class="left-side">
+            <div class="boxx">
+                <div class="rules">
+                    <h2>REGRAS</h2>
+                    <p>Para pontuar no Logic Crush você tem que alinhar três quadradinhos da mesma cor.</p>
+                </div>
+            </div>
+            <div class="boxx">
+                <div class="theory">
+                    <h2>Embasamento Teórico</h2>
+                    <ul>
+                        <li><span class="tautologia">TAUTOLOGIA</span> é toda proposição composta em cuja última coluna da sua tabela verdade só aparece VV (verdade)</li>
+                        <li><span class="contradicao">CONTRADIÇÃO</span> é toda proposição cuja última coluna da sua tabela verdade só tem FF (falso)</li>
+                        <li><span class="contingencia">CONTINGÊNCIA</span> é toda proposição cuja última coluna tem pelo menos um V e um F VF</li>
+                        <li><span class="contingencia2">CONTINGÊNCIA</span> é toda proposição cuja última coluna tem pelo menos um V e um F VF</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    
+        <div class="right-side">
+        <!-- coisas do lado direito (quadradinhos e botão) -->
+
+        <div class="grid"> 
+            <div class="box tautologia">FF</div>
+            <div class="box contingencia">VF</div>
+            <div class="box contingencia2">FV</div>
+            <div class="box contradicao">FF</div>
+            <div class="box contingencia">VF</div>
+            <div class="box tautologia">VV</div>
+            <div class="box contingencia2">FV</div>
+            <div class="box contradicao">FF</div>
+            <div class="box tautologia">VV</div>
+            <div class="box contingencia2">FV</div>
+            <div class="box contradicao">FF</div>
+            <div class="box contingencia2">FV</div>
+            <div class="box contradicao">FF</div>
+            <div class="box tautologia">VV</div>
+            <div class="box contingencia">VF</div>
+            <div class="box contingencia2">FV</div>
+            <div class="box tautologia">VV</div>
+            <div class="box contingencia">VF</div>
+            <div class="box contingencia2">FV</div>
+            <div class="box contingencia">VF</div>
+            <div class="box contradicao">FF</div>
+            <div class="box contingencia2">FV</div>
+            <div class="box tautologia">VV</div>
+            <div class="box contingencia">VF</div>
+            <div class="box contradicao">FF</div>
+            <div class="box contingencia2">FV</div>
+            <div class="box contingencia">VF</div>
+            <div class="box contradicao">FF</div>
+            <div class="box tautologia">VV</div>
+            <div class="box contingencia2">FV</div>
+        </div>
+        
+    
+            <!-- botão -->
+            <a href="{% url 'nivel1' %}" class="play-button">Jogar</a>
+        </div>
     </div>
 </body>
+
 </html>
+
+<style>
+    .logic-crush {
+        font-family: 'Lobster', cursive;
+        font-size: 48px;
+        color: #000000;
+        margin-top: 40px;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 3em;
+        font-family: 'Cursive', sans-serif;
+        margin-top: 50px;
+    }
+
+    .rules,
+    .theory {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        text-align: left;
+        border: 1px solid #ddd;
+        background-color: #fff;
+        border-radius: 10px;
+    }
+
+    .rules {
+        font-weight: bold;
+    }
+
+    .theory ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .theory ul li {
+        margin: 10px 0;
+    }
+
+    .tautologia {
+        color: green;
+        font-weight: bold;
+    }
+
+    .contradicao {
+        color: red;
+        font-weight: bold;
+    }
+
+    .contingencia {
+        color: orange;
+        font-weight: bold;
+    }
+
+    .contingencia2{
+        color: blue;
+        font-weight: bold;
+
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        /* 3 colunas para a parte colorida */
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+
+    }
+
+    .box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+        font-weight: bold;
+        color: white;
+        border-radius: 5px;
+        font-size: 18px;
+        
+        /* Ajuste o tamanho da fonte conforme necessário */
+    }
+
+    .tautologia.box {
+        background-color: green;
+    }
+
+    .contradicao.box {
+        background-color: red;
+    }
+
+    .contingencia.box {
+        background-color: orange;
+
+    }  
+    .contingencia2.box {
+        background-color: blue;
+        }
+
+    .play-button {
+        background-color: #401004;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 18px;
+        margin-top: 20px;
+        /* Espaçamento entre a grade e o botão */
+    }
+
+    .play-button:hover {
+        background-color: green;
+    }
+    .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.left-side {
+    flex: 1;
+    max-width: 60%;
+    padding: 10px;
+    margin-left: -3rem;
+}
+
+.right-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 150px;
+    margin-top: -60px;
+    
+}
+
+    .boxx {
+        background-color: #f8f9fa;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+    
+    }
+</style>

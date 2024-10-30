@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Crush</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <a href="{% url 'index' %}">
+        <div class="logic-crush">Logic Crush</div></a>
+    </header>
+
+    <div class="container">
+        <div class="left-side">
+            <div class="boxx">
+                <div class="rules">
+                    <h2>REGRAS</h2>
+                    <p>Para pontuar no Logic Crush, você precisa alinhar três quadradinhos da mesma cor.</p>
+                </div>
+            </div>
+            <div class="boxx">
+                <div class="theory">
+                    <h2>Embasamento Teórico</h2>
+                    <ul>
+                        <li><span class="tautologia">TAUTOLOGIA</span> é toda proposição composta em cuja última coluna da sua tabela verdade só aparece VV (verdade)</li>
+                        <li><span class="contradicao">CONTRADIÇÃO</span> é toda proposição cuja última coluna da sua tabela verdade só tem FF (falso)</li>
+                        <li><span class="contingencia">CONTINGÊNCIA</span> é toda proposição cuja última coluna tem pelo menos um V e um F VF</li>
+                        <li><span class="contingencia2">CONTINGÊNCIA</span> é toda proposição cuja última coluna tem pelo menos um V e um F FV</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-side">
+            <div class="level">
+                <span>Nível 1</span>
+            </div>
+
+            <div class="score" id="score">Pontos: 0</div>
+
+            <div class="grid" id="grid"></div>
+
+            <button class="play-button" onclick="startGame()">Jogar</button>
+        </div>
+    </div>
+
+    <script>
+        const grid = document.getElementById('grid');
+        const scoreDisplay = document.getElementById('score');
+        const colors = ['tautologia', 'contradicao', 'contingencia', 'contingencia2'];
+        const letters = { 'tautologia': 'VV', 'contradicao': 'FF', 'contingencia': 'VF', 'contingencia2': 'FV' };
+        const gridSize = 5; // 5x5 
+        let score = 0;
+        let selectedBox = null;
+        let previousState = null;
+
+        function createBoard() {
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const box = document.createElement('div');
+                box.classList.add('box');
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                box.classList.add(randomColor);
+                box.setAttribute('data-id', i);
+                box.innerText = letters[randomColor];
+                box.addEventListener('click', selectBox);
+                grid.appendChild(box);
+            }
+        }
+
+        function selectBox() {
+            if (selectedBox === null) {
+                selectedBox = this;
+                this.classList.add('selected');
+            } else {
+                // salva o estado dos blocos antes da troca
+                previousState = {
+                    box1: selectedBox,
+                    box1Classes: [...selectedBox.classList],
+                    box1Text: selectedBox.innerText,
+                    box2: this,
+                    box2Classes: [...this.classList],
+                    box2Text: this.innerText
+                };
+
+                swapBoxes(selectedBox, this);
+                selectedBox.classList.remove('selected');
+                selectedBox = null;
+
+                // verifica se acertou se não, não vai funcionar
+                if (!checkForMatches()) {
+                    revertSwap();
+                }
+            }
+        }
+
+        function swapBoxes(box1, box2) {
+            const tempClasses = [...box1.classList];
+            const tempText = box1.innerText;
+
+            box1.className = box2.className;
+            box1.innerText = box2.innerText;
+
+            box2.className = tempClasses.join(' ');
+            box2.innerText = tempText;
+        }
+
+        function revertSwap() {
+            previousState.box1.className = previousState.box1Classes.join(' ');
+            previousState.box1.innerText = previousState.box1Text;
+
+            previousState.box2.className = previousState.box2Classes.join(' ');
+            previousState.box2.innerText = previousState.box2Text;
+        }
+
+        function checkForMatches() {
+            let pointsEarned = 0;
+            let matchFound = false;
+
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const box = document.querySelector(`div[data-id='${i}']`);
+                const boxClass = box.classList[1];
+
+                // checa horizontal
+                if (i % gridSize < gridSize - 2 &&
+                    boxClass === document.querySelector(`div[data-id='${i + 1}']`).classList[1] &&
+                    boxClass === document.querySelector(`div[data-id='${i + 2}']`).classList[1]) {
+                    document.querySelector(`div[data-id='${i}']`).classList.add('remove');
+                    document.querySelector(`div[data-id='${i + 1}']`).classList.add('remove');
+                    document.querySelector(`div[data-id='${i + 2}']`).classList.add('remove');
+                    pointsEarned++;
+                    matchFound = true;
+                }
+
+                // checa vertical
+                if (i < gridSize * (gridSize - 2) &&
+                    boxClass === document.querySelector(`div[data-id='${i + gridSize}']`).classList[1] &&
+                    boxClass === document.querySelector(`div[data-id='${i + gridSize * 2}']`).classList[1]) {
+                    document.querySelector(`div[data-id='${i}']`).classList.add('remove');
+                    document.querySelector(`div[data-id='${i + gridSize}']`).classList.add('remove');
+                    document.querySelector(`div[data-id='${i + gridSize * 2}']`).classList.add('remove');
+                    pointsEarned++;
+                    matchFound = true;
+                }
+            }
+
+            if (matchFound) {
+                updateScore(pointsEarned);
+                removeMatches();
+                return true;
+            }
+            return false;
+        }
+
+        function updateScore(points) {
+            score += points;
+            scoreDisplay.innerText = `Pontos: ${score}`;
+            if (score >= 10) {
+                alert("Parabéns! Você atingiu 10 pontos e venceu o jogo!");
+                resetGame();
+            }
+        }
+
+        function removeMatches() {
+            const boxes = document.querySelectorAll('.remove');
+            boxes.forEach(box => {
+                box.className = 'box';
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                box.classList.add(randomColor);
+                box.innerText = letters[randomColor];
+                box.classList.remove('remove');
+            });
+        }
+
+        function startGame() {
+            score = 0;
+            scoreDisplay.innerText = `Pontos: ${score}`;
+            grid.innerHTML = ''; // limpa a grid
+            createBoard(); // cria o tabuleiro
+        }
+
+        function resetGame() {
+            score = 0;
+            scoreDisplay.innerText = 'Pontos: 0';
+            startGame();
+        }
+
+        startGame();
+    </script>
+</body>
+
+</html>
+
+
+</body>
+
+</html>
+<style>
+
+    /* Fonte personalizada para o título */
+.logic-crush {
+    font-family: 'Lobster', cursive;
+        font-size: 48px;
+        color: #000000;
+        margin-top: 40px;
+        margin-left: 50px;
+}
+
+/* Estilo do Body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Configuração da Container Principal */
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+/* Estilo para o Lado Esquerdo */
+.left-side {
+    flex: 1;
+    max-width: 40%;
+    padding: 20px;
+}
+
+.boxx {
+    background-color: #f8f9fa;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.rules h2, .theory h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.theory ul {
+    list-style: none;
+    padding: 0;
+}
+
+.theory ul li {
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+/* Estilo para Tautologia, Contradição e Contingência */
+.tautologia {
+    color: green;
+    font-weight: bold;
+}
+
+.contradicao {
+    color: red;
+    font-weight: bold;
+}
+
+.contingencia {
+    color: orange;
+    font-weight: bold;
+}
+.contingencia2{
+        color: blue;
+        font-weight: bold;
+
+    }
+
+/* Estilo para o Lado Direito */
+.right-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 260px;
+    margin-top: -16rem;
+}
+
+/* Estilo do Nível */
+.level {
+    background-color: #333;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+/* Estilo da Grade */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Estilo dos Blocos */
+.box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    font-weight: bold;
+    color: white;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+.tautologia.box {
+    background-color: green;
+}
+
+.contradicao.box {
+    background-color: red;
+}
+
+.contingencia.box {
+    background-color: orange;
+}
+.contingencia2.box {
+        background-color: blue;
+        }
+
+/* Estilo do Botão de Jogar */
+.play-button {
+    background-color: #401004;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+.play-button:hover {
+    background-color: #2d0a03;
+}
+
+</style>
