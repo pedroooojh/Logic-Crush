@@ -67,36 +67,47 @@
                 box.classList.add(randomColor);
                 box.setAttribute('data-id', i);
                 box.innerText = letters[randomColor];
-                box.addEventListener('click', selectBox);
+                box.setAttribute('draggable', true);
+                box.addEventListener('dragstart', dragStart);
+                box.addEventListener('dragover', dragOver);
+                box.addEventListener('drop', dragDrop);
+                box.addEventListener('dragend', dragEnd);
+                
                 grid.appendChild(box);
             }
         }
 
-        function selectBox() {
-            if (selectedBox === null) {
-                selectedBox = this;
-                this.classList.add('selected');
-            } else {
-                // salva o estado dos blocos antes da troca
-                previousState = {
-                    box1: selectedBox,
-                    box1Classes: [...selectedBox.classList],
-                    box1Text: selectedBox.innerText,
-                    box2: this,
-                    box2Classes: [...this.classList],
-                    box2Text: this.innerText
-                };
+        function dragStart(event) {
+            draggedBox = this;
+            previousState = {
+                box1Classes: [...this.classList],
+                box1Text: draggedBox.innerText
+            };
+            draggedBox.classList.add('dragging');
+        }
 
-                swapBoxes(selectedBox, this);
-                selectedBox.classList.remove('selected');
-                selectedBox = null;
+        function dragOver(event) {
+            event.preventDefault();
+        }
 
-                // verifica se acertou se não, não vai funcionar
-                if (!checkForMatches()) {
-                    revertSwap();
-                }
+        function dragDrop(event) {
+            targetBox = this;
+            if(draggedBox !== targetBox) {
+                previousState.box2Classes = [...targetBox.classList];
+                previousState.box2Text = targetBox.innerText;
+                swapBoxes(draggedBox, targetBox);
+            }
+            if(!checkForMatches()){
+                revertSwap();
             }
         }
+
+        function dragEnd(event) {
+            draggedBox.classList.remove('dragging');
+            draggedBox = null;
+            targetBox = null;
+        }
+
 
         function swapBoxes(box1, box2) {
             const tempClasses = [...box1.classList];
@@ -315,6 +326,7 @@ body {
     color: white;
     border-radius: 5px;
     font-size: 18px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 .tautologia.box {
@@ -347,6 +359,12 @@ body {
 
 .play-button:hover {
     background-color: #2d0a03;
+}
+
+.dragging {
+    opacity: 0.7;
+    transform: scale(1.2);
+    cursor: grabbing;
 }
 
 </style>
