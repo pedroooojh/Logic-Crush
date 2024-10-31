@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -38,36 +39,36 @@
         <!-- coisas do lado direito (quadradinhos e botão) -->
 
         <div class="grid"> 
-            <div class="box tautologia">FF</div>
-            <div class="box contingencia">VF</div>
-            <div class="box contingencia2">FV</div>
-            <div class="box contradicao">FF</div>
-            <div class="box contingencia">VF</div>
-            <div class="box tautologia">VV</div>
-            <div class="box contingencia2">FV</div>
-            <div class="box contradicao">FF</div>
-            <div class="box tautologia">VV</div>
-            <div class="box contingencia2">FV</div>
-            <div class="box contradicao">FF</div>
-            <div class="box contingencia2">FV</div>
-            <div class="box contradicao">FF</div>
-            <div class="box tautologia">VV</div>
-            <div class="box contingencia">VF</div>
-            <div class="box contingencia2">FV</div>
-            <div class="box tautologia">VV</div>
-            <div class="box contingencia">VF</div>
-            <div class="box contingencia2">FV</div>
-            <div class="box contingencia">VF</div>
-            <div class="box contradicao">FF</div>
-            <div class="box contingencia2">FV</div>
-            <div class="box tautologia">VV</div>
-            <div class="box contingencia">VF</div>
-            <div class="box contradicao">FF</div>
-            <div class="box contingencia2">FV</div>
-            <div class="box contingencia">VF</div>
-            <div class="box contradicao">FF</div>
-            <div class="box tautologia">VV</div>
-            <div class="box contingencia2">FV</div>
+            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
+            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
+            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
+            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
+            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
+            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
+            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
+            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
+            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
+            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
+            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
+            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
+            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
+            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
+            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
+            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
+            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
+            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
+            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
+            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
+            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
+            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
         </div>
         
     
@@ -147,43 +148,30 @@
 
     .grid {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        /* 3 colunas para a parte colorida */
-        gap: 10px;
+        grid-template-columns: repeat(5, 90px); /* Define a largura fixa para os blocos */
+        gap: 0px; /* Remove o espaçamento entre os blocos */
         justify-content: center;
         margin-top: 20px;
 
     }
 
     .box {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 50px;
-        height: 50px;
-        font-weight: bold;
-        color: white;
-        border-radius: 5px;
-        font-size: 18px;
+        width: 90px;   /* Mantenha o tamanho desejado */
+        height: 90px;
+        display: inline-block;
+        margin: 0px !important;   /* Reduz completamente o espaço entre os blocos */
+        padding: 0 !important;    /* Remove qualquer espaçamento interno */
+        vertical-align: top;
         
         /* Ajuste o tamanho da fonte conforme necessário */
     }
 
-    .tautologia.box {
-        background-color: green;
+    .box img {
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
     }
 
-    .contradicao.box {
-        background-color: red;
-    }
-
-    .contingencia.box {
-        background-color: orange;
-
-    }  
-    .contingencia2.box {
-        background-color: blue;
-        }
 
     .play-button {
         background-color: #401004;
