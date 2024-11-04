@@ -104,6 +104,9 @@
 
         function dragEnd(event) {
             draggedBox.classList.remove('dragging');
+            if (draggedBox !== targetBox) {
+                swapBoxes(draggedBox, targetBox);
+            }
             draggedBox = null;
             targetBox = null;
         }
