@@ -183,6 +183,7 @@
 
             if (!isAdjacent) {
                 alert('Movimento errado!');
+                swapBoxes(draggedBox, targetBox);
                 return;
             }
 
@@ -213,6 +214,7 @@
 
         function revertSwap() {
             alert('Movimento inválido! Sem combinações.');
+            swapBoxes(draggedBox, targetBox);
         }
 
         function checkForMatches() {
