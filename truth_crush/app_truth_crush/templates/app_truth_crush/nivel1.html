@@ -1,5 +1,6 @@
-{% load static %}
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="pt-BR">
 
 <head>
@@ -13,7 +14,8 @@
 <body>
     <header>
         <a href="{% url 'index' %}">
-        <div class="logic-crush">Logic Crush</div></a>
+            <div class="logic-crush">Logic Crush</div>
+        </a>
     </header>
 
     <div class="container">
@@ -30,8 +32,8 @@
                     <ul>
                         <li><span class="tautologia">TAUTOLOGIA</span> é toda proposição composta em cuja última coluna da sua tabela verdade só aparece VV (verdade)</li>
                         <li><span class="contradicao">CONTRADIÇÃO</span> é toda proposição cuja última coluna da sua tabela verdade só tem FF (falso)</li>
-                        <li><span class="contingencia">CONTINGÊNCIA</span> é toda proposição cuja última coluna tem pelo menos um V e um F VF</li>
-                        <li><span class="contingencia2">CONTINGÊNCIA</span> é toda proposição cuja última coluna tem pelo menos um V e um F FV</li>
+                        <li><span class="contingencia">CONTINGÊNCIA 1</span> é toda proposição cuja última coluna tem pelo menos um V e um F VF</li>
+                        <li><span class="contingencia2">CONTINGÊNCIA 2</span> é toda proposição cuja última coluna tem pelo menos um V e um F FV</li>
                     </ul>
                 </div>
             </div>
@@ -41,119 +43,123 @@
             <div class="level">
                 <span>Nível 1</span>
             </div>
-
+            <div class="target" id="target">Organize uma sequência de:</div>
             <div class="score" id="score">Pontos: 0</div>
-
             <div class="grid" id="grid">
-            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
-            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
-            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
-            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
-            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
-            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
-            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
-            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
-            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
-            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
-            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
-            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
-            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
-            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
-            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
-            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
-            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
-            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
-            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
-            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
-            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+                <!-- Os botões serão gerados dinamicamente -->
             </div>
             <a href="{% url 'nivel2' %}" id="proximonivel" class="proximonivel" style="display: none;">
                 Ir para o Nível 2
             </a>
 
             <button class="play-button" onclick="startGame()">Jogar</button>
+            <button class="reshuffle-button" onclick="reshuffleBoard()">Remexer Tabuleiro</button>
         </div>
     </div>
-
-    <div id="next-level-container">
-        <button id="next-level-button" style="display: none;">Ir para o Nível 2</button>
-    </div>
-    
 
     <script>
         const grid = document.getElementById('grid');
         const scoreDisplay = document.getElementById('score');
+        const commands = ['tautologia', 'contradicao', 'contingencia', 'contingencia2'];
+
         const colors = ['tautologia', 'contradicao', 'contingencia', 'contingencia2'];
         const letters = { 'tautologia': 'VV', 'contradicao': 'FF', 'contingencia': 'VF', 'contingencia2': 'FV' };
-        const gridSize = 5; // 5x5 
+        const gridSize = 5; // Tamanho da grade 5x5
         let score = 0;
-        let selectedBox = null;
-        let previousState = null;
+        let currentTarget = null; // Alvo atual do jogador
+        let draggedBox = null;
+        let targetBox = null;
 
         function createBoard() {
+            grid.innerHTML = ''; // Limpa a grade
             for (let i = 0; i < gridSize * gridSize; i++) {
-        const box = document.createElement('div');
-        box.classList.add('box');
+                const box = document.createElement('button');
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                box.classList.add('box', randomColor);
+                box.setAttribute('data-id', i);
+                box.innerText = letters[randomColor];
+                box.setAttribute('draggable', true);
+                box.addEventListener('dragstart', dragStart);
+                box.addEventListener('dragover', dragOver);
+                box.addEventListener('drop', dragDrop);
+                box.addEventListener('dragend', dragEnd);
+                grid.appendChild(box);
+            }
+        }
 
-        let randomColor;
-        do {
-            // Gere uma cor aleatória
-            randomColor = colors[Math.floor(Math.random() * colors.length)];
-        } while (hasMatch(i, randomColor)); // Verifique se a cor gera uma combinação
+        let commandIndex = 0;
+        function setNewTarget() {
+            // Mapeia cada tipo de comando para o texto desejado com cores
+            const commandText = {
+                'tautologia': '<span class="tautologia">Faça uma sequência de TAUTOLOGIA </span>',
+                'contradicao': '<span class="contradicao">Faça uma sequência de CONTRADIÇÃO </span>',
+                'contingencia': '<span class="contingencia">Faça uma sequência de CONTIGÊNCIA 1 </span>',
+                'contingencia2': '<span class="contingencia2">Faça uma sequência de CONTIGÊNCIA 2 </span>',
+            };
 
-        box.classList.add(randomColor);
-        box.setAttribute('data-id', i);
-        box.innerText = letters[randomColor];
-        box.setAttribute('draggable', true);
-        box.addEventListener('dragstart', dragStart);
-        box.addEventListener('dragover', dragOver);
-        box.addEventListener('drop', dragDrop);
-        box.addEventListener('dragend', dragEnd);
+            // Escolhe o próximo comando com base no índice atual
+            currentTarget = commands[commandIndex];
+            document.getElementById('target').innerHTML = commandText[currentTarget]; // Usa innerHTML para suportar tags HTML
 
-        grid.appendChild(box);
-    }
-}
+            // Avança para o próximo índice
+            commandIndex = (commandIndex + 1) % commands.length; // Avança na lista e reinicia no início
+        }
 
+
+        function reshuffleBoard() {
+            // Limpa o tabuleiro atual
+            grid.innerHTML = '';
+
+            // Recria o tabuleiro, garantindo que não haja sequências prontas
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const box = document.createElement('button');
+                let randomColor;
+                do {
+                    // Gera uma cor aleatória e verifica se não forma uma sequência
+                    randomColor = colors[Math.floor(Math.random() * colors.length)];
+                } while (hasMatch(i, randomColor)); // Verifica se há combinação
+
+                box.classList.add('box', randomColor);
+                box.setAttribute('data-id', i);
+                box.innerText = letters[randomColor];
+                box.setAttribute('draggable', true);
+
+                // Adiciona os eventos para arrastar e soltar
+                box.addEventListener('dragstart', dragStart);
+                box.addEventListener('dragover', dragOver);
+                box.addEventListener('drop', dragDrop);
+                box.addEventListener('dragend', dragEnd);
+
+                grid.appendChild(box);
+            }
+
+            console.log('Tabuleiro remexido com sucesso!');
+        }
         function hasMatch(index, color) {
             // Verificar combinação horizontal (esquerda)
-            if (index % gridSize >= 2) { // Apenas checa se houver pelo menos 2 blocos à esquerda
-                const left1 = document.querySelector(`div[data-id='${index - 1}']`);
-                const left2 = document.querySelector(`div[data-id='${index - 2}']`);
+            if (index % gridSize >= 2) {
+                const left1 = document.querySelector(`button[data-id='${index - 1}']`);
+                const left2 = document.querySelector(`button[data-id='${index - 2}']`);
                 if (left1 && left2 && left1.classList.contains(color) && left2.classList.contains(color)) {
                     return true; // Há combinação horizontal
                 }
             }
 
             // Verificar combinação vertical (acima)
-            if (index >= gridSize * 2) { // Apenas checa se houver pelo menos 2 blocos acima
-                const top1 = document.querySelector(`div[data-id='${index - gridSize}']`);
-                const top2 = document.querySelector(`div[data-id='${index - gridSize * 2}']`);
+            if (index >= gridSize * 2) {
+                const top1 = document.querySelector(`button[data-id='${index - gridSize}']`);
+                const top2 = document.querySelector(`button[data-id='${index - gridSize * 2}']`);
                 if (top1 && top2 && top1.classList.contains(color) && top2.classList.contains(color)) {
                     return true; // Há combinação vertical
                 }
             }
 
             return false; // Não há combinação
-}
-
+        }
 
 
         function dragStart(event) {
             draggedBox = this;
-            previousState = {
-                box1Classes: [...this.classList],
-                box1Text: draggedBox.innerText
-            };
-            draggedBox.classList.add('dragging');
         }
 
         function dragOver(event) {
@@ -162,122 +168,153 @@
 
         function dragDrop(event) {
             targetBox = this;
-            if(draggedBox !== targetBox) {
-                previousState.box2Classes = [...targetBox.classList];
-                previousState.box2Text = targetBox.innerText;
-                swapBoxes(draggedBox, targetBox);
+
+            const draggedId = parseInt(draggedBox.getAttribute('data-id'));
+            const targetId = parseInt(targetBox.getAttribute('data-id'));
+            const isAdjacent =
+                targetId === draggedId - 1 ||
+                targetId === draggedId + 1 ||
+                targetId === draggedId - gridSize ||
+                targetId === draggedId + gridSize ||
+                targetId === draggedId - gridSize - 1 ||
+                targetId === draggedId - gridSize + 1 ||
+                targetId === draggedId + gridSize - 1 ||
+                targetId === draggedId + gridSize + 1;
+
+            if (!isAdjacent) {
+                alert('Movimento errado!');
+                return;
             }
-            if(!checkForMatches()){
+
+            swapBoxes(draggedBox, targetBox);
+
+            if (checkForMatches()) {
+                updateScore(1);
+            } else {
                 revertSwap();
             }
         }
 
         function dragEnd(event) {
-            draggedBox.classList.remove('dragging');
-            if (draggedBox !== targetBox) {
-                swapBoxes(draggedBox, targetBox);
-            }
             draggedBox = null;
             targetBox = null;
         }
 
-
         function swapBoxes(box1, box2) {
-            const tempClasses = [...box1.classList];
+            const tempClass = [...box1.classList];
             const tempText = box1.innerText;
 
             box1.className = box2.className;
             box1.innerText = box2.innerText;
 
-            box2.className = tempClasses.join(' ');
+            box2.className = tempClass.join(' ');
             box2.innerText = tempText;
         }
 
         function revertSwap() {
-            previousState.box1.className = previousState.box1Classes.join(' ');
-            previousState.box1.innerText = previousState.box1Text;
-
-            previousState.box2.className = previousState.box2Classes.join(' ');
-            previousState.box2.innerText = previousState.box2Text;
+            alert('Movimento inválido! Sem combinações.');
         }
 
         function checkForMatches() {
-            let pointsEarned = 0;
+            const boxesToRemove = [];
             let matchFound = false;
 
             for (let i = 0; i < gridSize * gridSize; i++) {
-                const box = document.querySelector(`div[data-id='${i}']`);
+                const box = document.querySelector(`button[data-id='${i}']`);
                 const boxClass = box.classList[1];
 
-                // checa horizontal
-                if (i % gridSize < gridSize - 2 &&
-                    boxClass === document.querySelector(`div[data-id='${i + 1}']`).classList[1] &&
-                    boxClass === document.querySelector(`div[data-id='${i + 2}']`).classList[1]) {
-                    document.querySelector(`div[data-id='${i}']`).classList.add('remove');
-                    document.querySelector(`div[data-id='${i + 1}']`).classList.add('remove');
-                    document.querySelector(`div[data-id='${i + 2}']`).classList.add('remove');
-                    pointsEarned++;
+                if (
+                    i % gridSize < gridSize - 2 &&
+                    boxClass === currentTarget &&
+                    boxClass === document.querySelector(`button[data-id='${i + 1}']`).classList[1] &&
+                    boxClass === document.querySelector(`button[data-id='${i + 2}']`).classList[1]
+                ) {
+                    boxesToRemove.push(
+                        box,
+                        document.querySelector(`button[data-id='${i + 1}']`),
+                        document.querySelector(`button[data-id='${i + 2}']`)
+                    );
                     matchFound = true;
                 }
 
-                // checa vertical
-                if (i < gridSize * (gridSize - 2) &&
-                    boxClass === document.querySelector(`div[data-id='${i + gridSize}']`).classList[1] &&
-                    boxClass === document.querySelector(`div[data-id='${i + gridSize * 2}']`).classList[1]) {
-                    document.querySelector(`div[data-id='${i}']`).classList.add('remove');
-                    document.querySelector(`div[data-id='${i + gridSize}']`).classList.add('remove');
-                    document.querySelector(`div[data-id='${i + gridSize * 2}']`).classList.add('remove');
-                    pointsEarned++;
+                if (
+                    i < gridSize * (gridSize - 2) &&
+                    boxClass === currentTarget &&
+                    boxClass === document.querySelector(`button[data-id='${i + gridSize}']`).classList[1] &&
+                    boxClass === document.querySelector(`button[data-id='${i + gridSize * 2}']`).classList[1]
+                ) {
+                    boxesToRemove.push(
+                        box,
+                        document.querySelector(`button[data-id='${i + gridSize}']`),
+                        document.querySelector(`button[data-id='${i + gridSize * 2}']`)
+                    );
                     matchFound = true;
                 }
             }
 
             if (matchFound) {
-                updateScore(pointsEarned);
-                removeMatches();
-                return true;
+                boxesToRemove.forEach(box => {
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                    box.className = `box ${randomColor}`;
+                    box.innerText = letters[randomColor];
+                });
             }
-            return false;
+
+            return matchFound;
         }
 
         function updateScore(points) {
             score += points;
             scoreDisplay.innerText = `Pontos: ${score}`;
-            console.log(`Score atualizado: ${score}`); // Verifique se o score é atualizado corretamente
 
+            // Verifica se o jogador alcançou 10 pontos
             if (score >= 10) {
-                alert("Parabéns! Você atingiu 10 pontos e venceu o Nivel 1!");
+                // Exibe o botão de próximo nível
                 const nextLevelButton = document.getElementById('proximonivel');
-                console.log(nextLevelButton);
                 nextLevelButton.style.display = 'block';
-                resetGame();
+
+                // Mensagem de parabéns
+                alert("Parabéns! Você atingiu 10 pontos e avançou para o próximo nível!");
+            } else {
+                setNewTarget(); // Altera o alvo se o jogo continuar
             }
-}
-
-
-        function removeMatches() {
-            const boxes = document.querySelectorAll('.remove');
-            boxes.forEach(box => {
-                box.className = 'box';
-                const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                box.classList.add(randomColor);
-                box.innerText = letters[randomColor];
-                box.classList.remove('remove');
-            });
         }
+
 
         function startGame() {
-            score = 0;
-            scoreDisplay.innerText = `Pontos: ${score}`;
-            grid.innerHTML = ''; // limpa a grid
-            createBoard(); // cria o tabuleiro
+            score = 0; // Zera o placar
+            scoreDisplay.innerText = `Pontos: ${score}`; // Atualiza o placar na interface
+            grid.innerHTML = ''; // Limpa o tabuleiro existente
+
+            // Recria o tabuleiro garantindo que não haja sequências já formadas
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const box = document.createElement('button');
+                let randomColor;
+                do {
+                    // Gera uma cor aleatória e verifica se não forma uma sequência
+                    randomColor = colors[Math.floor(Math.random() * colors.length)];
+                } while (hasMatch(i, randomColor)); // Verifica se há combinação
+
+                box.classList.add('box', randomColor);
+                box.setAttribute('data-id', i);
+                box.innerText = letters[randomColor];
+                box.setAttribute('draggable', true);
+
+                // Adiciona os eventos necessários para arrastar e soltar
+                box.addEventListener('dragstart', dragStart);
+                box.addEventListener('dragover', dragOver);
+                box.addEventListener('drop', dragDrop);
+                box.addEventListener('dragend', dragEnd);
+
+                grid.appendChild(box); // Adiciona o bloco ao tabuleiro
+            }
+
+            // Define o primeiro objetivo para o jogador
+            setNewTarget();
+
+            console.log('Jogo reiniciado: tabuleiro remexido e placar zerado!');
         }
 
-        function resetGame() {
-            score = 0;
-            scoreDisplay.innerText = 'Pontos: 0';
-            startGame();
-        }
 
         startGame();
     </script>
@@ -286,181 +323,233 @@
 </html>
 
 
-</body>
-
-</html>
 <style>
+    .reshuffle-button {
+        background-color: #401004;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 18px;
+        margin-top: 10px;
+        text-decoration: none;
+    }
+
+    .reshuffle-button:hover {
+        background-color: #2d0a03;
+    }
+
+    /* Classe para transição ao remover */
+    /* Classe padrão para os blocos */
+    .box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 60px;
+        /* Tamanho fixo */
+        height: 60px;
+        /* Tamanho fixo */
+        font-weight: bold;
+        color: white;
+        border-radius: 5px;
+        font-size: 18px;
+        opacity: 1;
+        transform: scale(1);
+        transition: all 0.5s ease;
+        /* Transição suave */
+    }
+
+    /* Animação para quando os blocos desaparecem */
+    .remove {
+        opacity: 0;
+        transform: scale(0.5);
+        /* Reduz o tamanho para a metade */
+        transition: all 0.5s ease;
+    }
+
+    /* Animação para quando novos blocos aparecem */
+    .boxx {
+        opacity: 1;
+        transform: scale(1);
+        /* Garante que o tamanho volte ao normal */
+        transition: all 0.5s ease;
+    }
+
 
     /* Fonte personalizada para o título */
-.logic-crush {
-    font-family: 'Lobster', cursive;
+    .logic-crush {
+        font-family: 'Lobster', cursive;
         font-size: 48px;
         color: #000000;
         margin-top: 40px;
         margin-left: 50px;
-}
+    }
 
-/* Estilo do Body */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
-    margin: 0;
-    padding: 0;
-}
+    /* Estilo do Body */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
 
-/* Configuração da Container Principal */
-.container {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-}
+    /* Configuração da Container Principal */
+    .container {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+    }
 
-/* Estilo para o Lado Esquerdo */
-.left-side {
-    flex: 1;
-    max-width: 40%;
-    padding: 20px;
-}
+    /* Estilo para o Lado Esquerdo */
+    .left-side {
+        flex: 1;
+        max-width: 40%;
+        padding: 20px;
+    }
 
-.boxx {
-    background-color: #f8f9fa;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-}
+    .boxx {
+        background-color: #f8f9fa;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
 
-.rules h2, .theory h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
+    .rules h2,
+    .theory h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
 
-.theory ul {
-    list-style: none;
-    padding: 0;
-}
+    .theory ul {
+        list-style: none;
+        padding: 0;
+    }
 
-.theory ul li {
-    margin: 10px 0;
-    font-size: 14px;
-}
+    .theory ul li {
+        margin: 10px 0;
+        font-size: 14px;
+    }
 
-/* Estilo para Tautologia, Contradição e Contingência */
-.tautologia {
-    color: green;
-    font-weight: bold;
-}
+    /* Estilo para Tautologia, Contradição e Contingência */
+    .tautologia {
+        color: green;
+        font-weight: bold;
+    }
 
-.contradicao {
-    color: red;
-    font-weight: bold;
-}
+    .contradicao {
+        color: red;
+        font-weight: bold;
+    }
 
-.contingencia {
-    color: orange;
-    font-weight: bold;
-}
-.contingencia2{
+    .contingencia {
+        color: orange;
+        font-weight: bold;
+    }
+
+    .contingencia2 {
         color: blue;
         font-weight: bold;
 
     }
 
-/* Estilo para o Lado Direito */
-.right-side {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 260px;
-    margin-top: -16rem;
-}
+    /* Estilo para o Lado Direito */
+    .right-side {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 260px;
+        margin-top: -16rem;
+    }
 
-/* Estilo do Nível */
-.level {
-    background-color: #333;
-    color: white;
-    padding: 5px 15px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    font-size: 18px;
-}
+    /* Estilo do Nível */
+    .level {
+        background-color: #333;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        font-size: 18px;
+    }
 
-/* Estilo da Grade */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
-}
+    /* Estilo da Grade */
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+    }
 
-/* Estilo dos Blocos */
-.box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 60px;
-    height: 60px;
-    font-weight: bold;
-    color: white;
-    border-radius: 5px;
-    font-size: 18px;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-}
+    /* Estilo dos Blocos */
+    .box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 60px;
+        height: 60px;
+        font-weight: bold;
+        color: white;
+        border-radius: 5px;
+        font-size: 18px;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+    }
 
-.proximonivel {
-    background-color: #401004;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    text-align: center;
-    font-size: 18px;
-    text-decoration: none;
-}
+    .proximonivel {
+        background-color: #401004;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 18px;
+        text-decoration: none;
+    }
 
-.proximonivel:hover {
-    background-color: #2d0a03;
-}
+    .proximonivel:hover {
+        background-color: #2d0a03;
+    }
 
 
-.tautologia.box {
-    background-color: green;
-}
+    .tautologia.box {
+        background-color: green;
+    }
 
-.contradicao.box {
-    background-color: red;
-}
+    .contradicao.box {
+        background-color: red;
+    }
 
-.contingencia.box {
-    background-color: orange;
-}
-.contingencia2.box {
+    .contingencia.box {
+        background-color: orange;
+    }
+
+    .contingencia2.box {
         background-color: blue;
-        }
+    }
 
-/* Estilo do Botão de Jogar */
-.play-button {
-    background-color: #401004;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    text-align: center;
-    font-size: 18px;
-    text-decoration: none;
-}
+    /* Estilo do Botão de Jogar */
+    .play-button {
+        background-color: #401004;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 18px;
+        text-decoration: none;
+    }
 
-.play-button:hover {
-    background-color: #2d0a03;
-}
+    .play-button:hover {
+        background-color: #2d0a03;
+    }
 
-.dragging {
-    opacity: 0.7;
-    transform: scale(1.2);
-    cursor: grabbing;
-}
-
+    .dragging {
+        opacity: 0.7;
+        transform: scale(1.2);
+        cursor: grabbing;
+    }
 </style>

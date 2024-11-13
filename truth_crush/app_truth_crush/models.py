@@ -12,4 +12,7 @@ class Block(models.Model):
 
     def __str__(self):
         return self.block_type
+    
+    
+
 
