@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logic Crush</title>
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    
 </head>
 
 <body>
@@ -79,7 +79,6 @@
         function createBoard() {
             grid.innerHTML = ''; // Limpa a grade
             let targetCount = 0; // Contador para garantir a sequência do comando atual
-            const wallPositions = [0, 1, 4, 5, 6, 7, 10, 11, 24, 25, 28, 29, 30, 31, 34, 35]; // Posições das paredes
 
             for (let i = 0; i < gridSize * gridSize; i++) {
                 const box = document.createElement('button');
@@ -116,9 +115,13 @@
             }
 
             // Garante que a sequência de 3 do alvo atual existe
-            if (targetCount < 3) {
+            if (targetCount < 3 && forceValidSequence) {
                 forceValidSequence(currentTarget);
             }
+
+             // Configura o grid dinamicamente
+            grid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`; // 6 colunas
+
         }
         function forceValidSequence(target) {
             const emptySpots = Array.from(document.querySelectorAll('.grid .box'))
@@ -246,13 +249,31 @@
         }
 
         function dragDrop(event) {
+            // Impede que as paredes sejam movimentadas
             if (this.classList.contains('wall')) return;
-
+        
             targetBox = this;
-
+        
+            // Verifica se os blocos são adjacentes (cima, baixo, esquerda, direita)
+            const draggedId = parseInt(draggedBox.getAttribute('data-id'));
+            const targetId = parseInt(targetBox.getAttribute('data-id'));
+        
+            // Calcula a adjacência com base no gridSize
+            const isAdjacent =
+                targetId === draggedId - 1 || // Esquerda
+                targetId === draggedId + 1 || // Direita
+                targetId === draggedId - gridSize || // Acima
+                targetId === draggedId + gridWidth; // Abaixo
+        
+            if (!isAdjacent){
+                alert("Movimento invalido");    
+        }
+                
+            // Realiza a troca se forem adjacentes
             if (draggedBox !== targetBox) {
                 swapBoxes(draggedBox, targetBox);
-
+        
+                // Verifica se há combinações após a troca
                 if (!checkForMatches()) {
                     swapBoxes(draggedBox, targetBox); // Reverte se não houver combinações
                 } else {
@@ -346,6 +367,8 @@
         }
 
         startGame();
+        
+            
     </script>
 </body>
 
