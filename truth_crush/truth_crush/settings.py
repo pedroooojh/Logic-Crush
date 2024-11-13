@@ -119,7 +119,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [r'C:\Users\joao2\OneDrive\Documentos\GitHub\Logic-Crush\static']
+STATICFILES_DIRS = [BASE_DIR / "app_truth_crush/static"]
 STATIC_ROOT = BASE_DIR / 'staticfiles'   
 
 # Default primary key field type

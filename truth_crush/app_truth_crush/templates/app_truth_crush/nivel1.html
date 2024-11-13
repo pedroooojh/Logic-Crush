@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logic Crush</title>
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    {% static 'app_truth_crush/style.css' %}
 </head>
 
 <body>
@@ -45,36 +45,36 @@
             <div class="score" id="score">Pontos: 0</div>
 
             <div class="grid" id="grid">
-            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
-            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
-            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
-            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
-            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
-            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
-            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
-            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
-            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
-            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
-            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
-            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
-            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
-            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
-            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
-            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
-            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
-            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
-            <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
-            <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
-            <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
-            <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+                <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
+                <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
+                <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+                <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
+                <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
+                <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
+                <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+                <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
+                <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
+                <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+                <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
+                <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+                <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
+                <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
+                <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
+                <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+                <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
+                <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
+                <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+                <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
+                <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
+                <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+                <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
+                <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
+                <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
+                <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
+                <div class="box contingencia"><img src="{% static 'sprites/VF.png' %}" alt="VF"></div>
+                <div class="box contradicao"><img src="{% static 'sprites/FF.png' %}" alt="FF"></div>
+                <div class="box tautologia"><img src="{% static 'sprites/VV.png' %}" alt="VV"></div>
+                <div class="box contingencia2"><img src="{% static 'sprites/FV.png' %}" alt="FV"></div>
             </div>
             <a href="{% url 'nivel2' %}" id="proximonivel" class="proximonivel" style="display: none;">
                 Ir para o Nível 2
