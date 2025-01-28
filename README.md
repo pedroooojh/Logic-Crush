@@ -70,3 +70,22 @@ Ao final de cada sessão, o jogador pode visualizar seu progresso, incluindo:
 - Nível alcançado.  
 
 Isso promove uma visão clara sobre suas habilidades lógicas e o caminho para o próximo desafio.
+
+## Como Executar
+Para compilar e executar a aplicação, siga os passos abaixo:
+
+1. Clone o repositório:
+    ```bash
+    git clone https://github.com/pedroooojh/Logic-Crush.git
+    ```
+
+2. Acesse o diretório do projeto:
+    ```bash
+    cd comandosUSE
+    ```
+   
+4. Inicie o Servidor do FACT:
+    ```bash
+    python manage.py runserver
+    ```
+
