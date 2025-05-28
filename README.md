@@ -40,7 +40,7 @@ O jogador deve alinhar três quadradinhos da mesma cor conforme o tipo de propos
 ## Pontuação
 - Cada proposição correta formada vale **1 ponto**.
 - Ao alcançar **10 pontos**, o jogo aumenta a dificuldade:
-  - **Paredes são adicionadas**, bloqueando algumas posições no tabuleiro.
+- **Paredes são adicionadas**, bloqueando algumas posições no tabuleiro.
 
 ---
 
